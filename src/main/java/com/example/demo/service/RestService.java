@@ -15,7 +15,7 @@ public class RestService {
     }
 
     public <T> T request(String url, HttpMethod method, ParameterizedTypeReference<T> responseType) {
-        ResponseEntity<T> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+        ResponseEntity<T> response = restTemplate.exchange(url, method, null, responseType);
         return response.getBody();
     }
 }
