@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
@@ -57,11 +58,10 @@ class QuoteServiceTest {
 
         Mono<Quote> quoteMono = quoteService.getQuote();
 
-        Quote quote = quoteMono.block();
-
-        assertNotNull(quote);
-        assertEquals("type", quote.getType());
-
-        log.info(quote.toString());
+        StepVerifier.create(quoteMono)
+                .expectNextMatches(q -> q.getType().equals("type"))
+                .expectComplete()
+                .verify()
+        ;
     }
 }
