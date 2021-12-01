@@ -8,7 +8,11 @@ public class Value {
     private Long id;
     private String quote;
 
-    public Value() {
+    public Value() {}
+
+    public Value(Long id, String quote) {
+        this.id = id;
+        this.quote = quote;
     }
 
     public Long getId() {
