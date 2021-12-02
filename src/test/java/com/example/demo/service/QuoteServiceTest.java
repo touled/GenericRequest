@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.error.QuoteServiceException;
 import com.example.demo.model.Quote;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
@@ -43,7 +42,7 @@ class QuoteServiceTest {
     }
 
     @Test
-    void test1() throws JsonProcessingException {
+    void test1() {
         String json = "{\n" +
                 "    \"type\" : \"type\",\n" +
                 "    \"value\" : {\n" +
@@ -63,5 +62,25 @@ class QuoteServiceTest {
                 .expectComplete()
                 .verify()
         ;
+    }
+
+    @Test
+    void test2() {
+        String json = "{\n" +
+                "    \"type\" : \"type\",\n" +
+                "    \"value\" : {\n" +
+                "        \"id\" : 1,\n" +
+                "        \"quote\" : \"Quote1\",\n" +
+                "        \"another_property\" : \"Property value 1\"\n" +
+                "    }\n" +
+                "}";
+        mockBackEnd.enqueue(new MockResponse()
+                .setResponseCode(404)
+                .setBody(json)
+                .addHeader("Content-Type", TEXT_HTML));
+
+        Mono<Quote> quoteMono = quoteService.getQuote();
+
+        assertThrows(QuoteServiceException.class, quoteMono::block);
     }
 }
